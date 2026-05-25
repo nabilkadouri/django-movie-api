@@ -1,0 +1,2 @@
+from .category_serializer import CategorySerializer
+from .movie_serializer import MovieSerializer
