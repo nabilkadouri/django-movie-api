@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from movies.models import Movie, Favorite
+from movies.models import Favorite
 from django.contrib.auth.models import User
 
 
 
-class FavoriteSerializer(serializers.models):
+class FavoriteSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Favorite
