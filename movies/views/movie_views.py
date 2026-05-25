@@ -8,6 +8,7 @@ from movies.models import Movie
 class MovieView(APIView):
     
     def post(self, request):
+        
         serializer = MovieSerializer(data=request.data)
         
         if serializer.is_valid():

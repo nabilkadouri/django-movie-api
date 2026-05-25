@@ -1,2 +1,6 @@
 from .category_serializer import CategorySerializer
 from .movie_serializer import MovieSerializer
+from .director_serializer import DirectorSerializer
+from .actor_serializer import ActorSerializer
+from .favorite_serializer import FavoriteSerializer
+from .review_serializer import ReviewSerializer
