@@ -214,7 +214,7 @@ git clone https://github.com/TON-USERNAME/django-movie-api.git
 ## Créer un environnement virtuel
 
 ```bash
-python3 -m venv venv
+python3 -m venv env
 ```
 
 ---
