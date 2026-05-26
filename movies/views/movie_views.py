@@ -15,9 +15,8 @@ class MovieView(APIView):
         if serializer.is_valid():
             
             serializer.save()
-            result = serializer.data
             
-            return Response(result,status=status.HTTP_201_CREATED)
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -49,13 +48,17 @@ class MovieDetailView(APIView):
         
         movie = get_object_or_404(Movie, pk=pk)
         
-        serializer = MovieUpdateSerializer(movie, data=request.data, partial= True)
+        serializer = MovieUpdateSerializer(
+            movie, 
+            data=request.data, 
+            partial=True
+            )
         
         if serializer.is_valid():
-            serializer.save()
-            result = serializer.data
             
-            return Response(result,status=status.HTTP_200_OK)
+            serializer.save()
+            
+            return Response(serializer.data,status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -67,10 +70,10 @@ class MovieDetailView(APIView):
         serializer = MovieSerializer(movie, data=request.data)
         
         if serializer.is_valid():
-            serializer.save()
-            result = serializer.data
             
-            return Response(result, status=status.HTTP_200_OK)
+            serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
