@@ -61,5 +61,18 @@ class MovieSerializer(serializers.ModelSerializer):
             )
             
         return value
+    
+class MovieUpdateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Movie
+        fields = [
+            "description",
+            "image",
+            "categories",
+            "is_published"
+        ]
             
+    def validate_description(self,value):
         
+        return value.strip()

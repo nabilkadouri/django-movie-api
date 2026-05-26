@@ -1,5 +1,5 @@
 from .category_serializer import CategorySerializer
-from .movie_serializer import MovieSerializer
+from .movie_serializer import MovieSerializer, MovieUpdateSerializer
 from .director_serializer import DirectorSerializer
 from .actor_serializer import ActorSerializer
 from .favorite_serializer import FavoriteSerializer
