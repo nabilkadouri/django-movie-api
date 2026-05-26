@@ -3,4 +3,4 @@ from .movie_serializer import MovieSerializer, MovieUpdateSerializer
 from .director_serializer import DirectorSerializer
 from .actor_serializer import ActorSerializer
 from .favorite_serializer import FavoriteSerializer
-from .review_serializer import ReviewSerializer
+from .review_serializer import ReviewSerializer, ReviewUpdateSerializer

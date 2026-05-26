@@ -32,5 +32,31 @@ class ReviewSerializer(serializers.ModelSerializer):
             )
             
         return data
+    
+    
+class ReviewUpdateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Review
+        fields = [
+            "rating",
+            "comment"
+        ]
+        
+    def validate_comment(self, value):
+    
+        return value.strip()
+    
+    
+    def validate_rating(self, value):
+    
+        if value <= 0 or value > 10:
+            raise serializers.ValidationError(
+                "La note doit être comprise entre 1 et 10."
+            )
+        
+        return value
+    
+    
                
             
