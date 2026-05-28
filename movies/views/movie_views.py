@@ -1,12 +1,22 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import (IsAuthenticated, AllowAny)
 from django.shortcuts import get_object_or_404
 
 from movies.serializers import MovieSerializer, MovieUpdateSerializer
 from movies.models import Movie
+from movies.permissions.movie_permissions import IsMovieAdminOrOwner
 
 class MovieView(APIView):
+    
+    def get_permissions(self):
+
+        if self.request.method == "GET":
+            return [AllowAny()]
+
+        return [IsAuthenticated()]
+    
     
     def post(self, request):
         
@@ -14,7 +24,7 @@ class MovieView(APIView):
         
         if serializer.is_valid():
             
-            serializer.save()
+            serializer.save(created_by=request.user)
             
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         
@@ -35,6 +45,16 @@ class MovieView(APIView):
     
 class MovieDetailView(APIView):
     
+    def get_permissions(self):
+
+        if self.request.method == "GET":
+            return [AllowAny()]
+
+        return [
+            IsAuthenticated(),
+            IsMovieAdminOrOwner()
+        ]
+    
     def get(self, request, pk=None):
         
         movie = get_object_or_404(Movie, pk=pk)
@@ -47,6 +67,11 @@ class MovieDetailView(APIView):
     def patch(self, request, pk=None):
         
         movie = get_object_or_404(Movie, pk=pk)
+        
+        self.check_object_permissions(
+            request,
+            movie
+        )
         
         serializer = MovieUpdateSerializer(
             movie, 
@@ -67,6 +92,11 @@ class MovieDetailView(APIView):
         
         movie = get_object_or_404(Movie, pk=pk)
         
+        self.check_object_permissions(
+            request,
+            movie
+        )
+        
         serializer = MovieSerializer(movie, data=request.data)
         
         if serializer.is_valid():
@@ -81,6 +111,11 @@ class MovieDetailView(APIView):
     def delete(self, request, pk=None):
         
         movie = get_object_or_404(Movie, pk=pk)
+        
+        self.check_object_permissions(
+            request,
+            movie
+        )
         
         movie.delete()
         

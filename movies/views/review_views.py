@@ -1,13 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
 
 from movies.serializers import ReviewSerializer, ReviewUpdateSerializer
 from movies.models import Review
-
-
+from movies.permissions.review_permissions import IsOwnerReview
 class ReviewView(APIView):
+    
+    def get_permissions(self):
+
+        if self.request.method == "GET":
+            return [AllowAny()]
+
+        return [IsAuthenticated()]
+    
     
     def post(self, request):
         
@@ -15,7 +23,7 @@ class ReviewView(APIView):
         
         if serializer.is_valid():
             
-            serializer.save()
+            serializer.save(user=request.user)
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
@@ -37,6 +45,16 @@ class ReviewView(APIView):
     
 class ReviewDetailView(APIView):
     
+    def get_permissions(self):
+
+        if self.request.method == "GET":
+            return [AllowAny()]
+
+        return [
+            IsAuthenticated(),
+            IsOwnerReview()
+        ]
+    
     def get(self, request, pk=None):
         
         review = get_object_or_404(
@@ -56,6 +74,11 @@ class ReviewDetailView(APIView):
             pk=pk
         )
         
+        self.check_object_permissions(
+            request,
+            review
+        )
+        
         serializer = ReviewUpdateSerializer(
             review,
             data=request.data,
@@ -73,7 +96,15 @@ class ReviewDetailView(APIView):
     
     def delete(self, request, pk=None):
         
-        review = get_object_or_404(Review, pk=pk)
+        review = get_object_or_404(
+            Review,
+            pk=pk,
+            )
+        
+        self.check_object_permissions(
+            request,
+            review
+        )
         
         review.delete()
         

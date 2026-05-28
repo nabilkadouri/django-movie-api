@@ -7,6 +7,7 @@ class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = "__all__"
+        read_only_fields = ["created_by"]
         
     def validate_title(self,value):
         

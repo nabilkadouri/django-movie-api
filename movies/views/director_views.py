@@ -2,11 +2,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import AllowAny, IsAdminUser
 
 from movies.serializers import DirectorSerializer
 from movies.models import Director
 
 class DirectorView(APIView):
+    
+    def get_permissions(self):
+        
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        
+        else:
+            return [IsAdminUser()]
+        
     
     def post(self, request):
         
@@ -35,6 +45,14 @@ class DirectorView(APIView):
 
 class DirectorDetailView(APIView):
     
+    def get_permissions(self):
+        
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        
+        else:
+            return [IsAdminUser()]
+        
     
     def get(self, request, pk=None):
         
