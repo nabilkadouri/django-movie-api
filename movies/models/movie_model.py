@@ -32,6 +32,7 @@ class Movie(models.Model):
         Director,
         on_delete=models.CASCADE,
         related_name="movies",
+        null=True,
         blank=True
         )
     
