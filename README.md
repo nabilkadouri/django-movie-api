@@ -1,72 +1,86 @@
-# Django Movie API
+# CineVault API
 
 API REST développée avec Django et Django REST Framework permettant la gestion de films, catégories, acteurs, réalisateurs, reviews et favoris.
 
-Ce projet a été réalisé dans une logique d’apprentissage avancé du backend Django REST :
+Ce projet a été réalisé dans une logique d’apprentissage avancé du backend Django REST afin de maîtriser :
 
-- architecture REST
-- serializers DRF
-- relations SQL
-- validations métier
-- CRUD personnalisés
-- organisation backend
+* Architecture REST
+* Django REST Framework
+* Serializers
+* Validations métier
+* Authentification JWT
+* Permissions utilisateurs
+* Relations SQL
+* CRUD personnalisés
+* Organisation d’un backend professionnel
 
 ---
 
 # Fonctionnalités
 
+## Authentification JWT
+
+* Inscription utilisateur
+* Connexion utilisateur
+* Génération Access Token
+* Génération Refresh Token
+* Protection des routes privées
+
 ## Movies
 
-- Création d’un film
-- Liste des films
-- Détail d’un film
-- Modification partielle d’un film
-- Remplacement complet d’un film
-- Suppression d’un film
+* Création d’un film
+* Liste des films
+* Détail d’un film
+* Modification partielle d’un film
+* Remplacement complet d’un film
+* Suppression d’un film
 
 ## Categories
 
-- Création d’une catégorie
-- Liste des catégories
-- Modification d’une catégorie
-- Suppression d’une catégorie
+* Création d’une catégorie
+* Liste des catégories
+* Modification d’une catégorie
+* Suppression d’une catégorie
 
 ## Directors
 
-- Création d’un réalisateur
-- Liste des réalisateurs
-- Détail d’un réalisateur
-- Suppression d’un réalisateur
+* Création d’un réalisateur
+* Liste des réalisateurs
+* Détail d’un réalisateur
+* Suppression d’un réalisateur
 
 ## Actors
 
-- Création d’un acteur
-- Liste des acteurs
-- Détail d’un acteur
-- Suppression d’un acteur
+* Création d’un acteur
+* Liste des acteurs
+* Détail d’un acteur
+* Suppression d’un acteur
 
 ## Reviews
 
-- Création d’une review
-- Liste des reviews
-- Détail d’une review
-- Modification d’une review
-- Suppression d’une review
+* Création d’une review
+* Liste des reviews
+* Détail d’une review
+* Modification d’une review
+* Suppression d’une review
 
 ## Favorites
 
-- Ajout d’un film en favori
-- Liste des favoris
-- Suppression d’un favori
+* Ajout d’un film en favori
+* Liste des favoris d’un utilisateur
+* Détail d’un favori
+* Suppression d’un favori
 
 ---
 
 # Stack technique
 
-- Python
-- Django
-- Django REST Framework
-- SQLite
+* Python 3
+* Django
+* Django REST Framework
+* Simple JWT
+* SQLite
+* Postman
 
 ---
 
@@ -86,16 +100,22 @@ movies/
 │   ├── movie_serializer.py
 │   ├── review_serializer.py
 │   ├── favorite_serializer.py
+│   ├── actor_serializer.py
+│   ├── director_serializer.py
 │   └── ...
+│
+├── permissions/
+│   ├── review_permissions.py
+│   ├── favorite_permissions.py
 │
 ├── views/
 │   ├── movie_views.py
 │   ├── review_views.py
 │   ├── favorite_views.py
-│   └── ...
+│   ├── actor_views.py
+│   └── director_views.py
 │
-├── services/
-│
+├── admin.py
 ├── urls.py
 ```
 
@@ -105,29 +125,75 @@ movies/
 
 ## Movie
 
-- ManyToMany → Categories
-- ManyToMany → Actors
-- ForeignKey → Director
+* ManyToMany → Categories
+* ManyToMany → Actors
+* ForeignKey → Director
 
 ## Favorite
 
-- ForeignKey → User
-- ForeignKey → Movie
+* ForeignKey → User
+* ForeignKey → Movie
 
 ## Review
 
-- ForeignKey → User
-- ForeignKey → Movie
+* ForeignKey → User
+* ForeignKey → Movie
 
 ---
 
 # Règles métier
 
-- Un utilisateur ne peut pas ajouter deux fois le même film en favori
-- Un utilisateur ne peut pas poster plusieurs reviews pour un même film
-- Une review doit avoir une note comprise entre 1 et 10
-- Une année de film ne peut pas être supérieure à l’année actuelle
-- Les champs texte sont nettoyés automatiquement via les serializers
+## Reviews
+
+* Un utilisateur ne peut publier qu'une seule review par film
+* Une note doit être comprise entre 1 et 10
+* Les commentaires sont automatiquement nettoyés
+
+## Favorites
+
+* Un utilisateur ne peut ajouter qu'une seule fois un film dans ses favoris
+
+## Movies
+
+* Une année de sortie ne peut pas être supérieure à l'année actuelle
+* Les données textuelles sont nettoyées avant sauvegarde
+
+## Permissions
+
+* Les reviews ne peuvent être modifiées ou supprimées que par leur propriétaire
+* Les favoris ne peuvent être supprimés que par leur propriétaire
+* Les acteurs et réalisateurs sont réservés aux administrateurs
+
+---
+
+# Authentification JWT
+
+## Register
+
+```http
+POST /api/auth/register/
+```
+
+## Login
+
+```http
+POST /api/auth/login/
+```
+
+Réponse :
+
+```json
+{
+    "access": "jwt_access_token",
+    "refresh": "jwt_refresh_token"
+}
+```
+
+## Refresh Token
+
+```http
+POST /api/auth/token/refresh/
+```
 
 ---
 
@@ -135,69 +201,122 @@ movies/
 
 ## Movies
 
-| Méthode | Endpoint | Description |
-|---|---|---|
-| GET | /movies/ | Liste des films |
-| POST | /movies/ | Ajouter un film |
-| GET | /movies/<id>/ | Détail d’un film |
-| PATCH | /movies/<id>/ | Modifier partiellement un film |
-| PUT | /movies/<id>/ | Remplacer complètement un film |
-| DELETE | /movies/<id>/ | Supprimer un film |
+| Méthode | Endpoint          |
+| ------- | ----------------- |
+| GET     | /api/movies/      |
+| POST    | /api/movies/      |
+| GET     | /api/movies/<id>/ |
+| PATCH   | /api/movies/<id>/ |
+| PUT     | /api/movies/<id>/ |
+| DELETE  | /api/movies/<id>/ |
 
 ---
 
 ## Categories
 
-| Méthode | Endpoint | Description |
-|---|---|---|
-| GET | /categories/ | Liste des catégories |
-| POST | /categories/ | Ajouter une catégorie |
-| PATCH | /categories/<id>/ | Modifier une catégorie |
-| DELETE | /categories/<id>/ | Supprimer une catégorie |
+| Méthode | Endpoint                     |
+| ------- | ---------------------------- |
+| GET     | /api/movies/categories/      |
+| POST    | /api/movies/categories/      |
+| PATCH   | /api/movies/categories/<id>/ |
+| DELETE  | /api/movies/categories/<id>/ |
 
 ---
 
 ## Directors
 
-| Méthode | Endpoint | Description |
-|---|---|---|
-| GET | /directors/ | Liste des réalisateurs |
-| POST | /directors/ | Ajouter un réalisateur |
-| GET | /directors/<id>/ | Détail d’un réalisateur |
-| DELETE | /directors/<id>/ | Supprimer un réalisateur |
+| Méthode | Endpoint                    |
+| ------- | --------------------------- |
+| GET     | /api/movies/directors/      |
+| POST    | /api/movies/directors/      |
+| GET     | /api/movies/directors/<id>/ |
+| DELETE  | /api/movies/directors/<id>/ |
 
 ---
 
 ## Actors
 
-| Méthode | Endpoint | Description |
-|---|---|---|
-| GET | /actors/ | Liste des acteurs |
-| POST | /actors/ | Ajouter un acteur |
-| GET | /actors/<id>/ | Détail d’un acteur |
-| DELETE | /actors/<id>/ | Supprimer un acteur |
+| Méthode | Endpoint                 |
+| ------- | ------------------------ |
+| GET     | /api/movies/actors/      |
+| POST    | /api/movies/actors/      |
+| GET     | /api/movies/actors/<id>/ |
+| DELETE  | /api/movies/actors/<id>/ |
 
 ---
 
 ## Reviews
 
-| Méthode | Endpoint | Description |
-|---|---|---|
-| GET | /reviews/ | Liste des reviews |
-| POST | /reviews/ | Ajouter une review |
-| GET | /reviews/<id>/ | Détail d’une review |
-| PATCH | /reviews/<id>/ | Modifier une review |
-| DELETE | /reviews/<id>/ | Supprimer une review |
+| Méthode | Endpoint                  |
+| ------- | ------------------------- |
+| GET     | /api/movies/reviews/      |
+| POST    | /api/movies/reviews/      |
+| GET     | /api/movies/reviews/<id>/ |
+| PATCH   | /api/movies/reviews/<id>/ |
+| DELETE  | /api/movies/reviews/<id>/ |
 
 ---
 
 ## Favorites
 
-| Méthode | Endpoint | Description |
-|---|---|---|
-| GET | /favorites/ | Liste des favoris |
-| POST | /favorites/ | Ajouter un favori |
-| DELETE | /favorites/<id>/ | Supprimer un favori |
+| Méthode | Endpoint                    |
+| ------- | --------------------------- |
+| GET     | /api/movies/favorites/      |
+| POST    | /api/movies/favorites/      |
+| GET     | /api/movies/favorites/<id>/ |
+| DELETE  | /api/movies/favorites/<id>/ |
+
+---
+
+# Django Admin
+
+Le projet utilise l'interface d'administration Django pour gérer les données.
+
+Accès :
+
+```http
+http://127.0.0.1:8000/admin/
+```
+
+Fonctionnalités :
+
+* Consultation des films
+* Consultation des acteurs
+* Consultation des réalisateurs
+* Consultation des reviews
+* Consultation des favoris
+* Consultation des utilisateurs
+
+Les identifiants sont affichés directement dans l'interface afin de faciliter les tests API.
+
+---
+
+# Tests Postman
+
+L'ensemble des endpoints a été testé avec Postman.
+
+Tests réalisés :
+
+* Authentification JWT
+* CRUD Movies
+* CRUD Reviews
+* CRUD Favorites
+* CRUD Actors
+* CRUD Directors
+* Permissions utilisateurs
+* Validation des données métier
+
+Ajouter une capture d'écran :
+
+```txt
+docs/postman-tests.png
+```
+
+Puis dans le README :
+
+```md
+![Postman Collection](docs/postman-tests.png)
+```
 
 ---
 
@@ -206,34 +325,28 @@ movies/
 ## Cloner le projet
 
 ```bash
-git clone https://github.com/TON-USERNAME/django-movie-api.git
+git clone https://github.com/NabilKADOURI/cinevault.git
 ```
-
----
 
 ## Créer un environnement virtuel
 
 ```bash
-python3 -m venv env
+python3 -m venv .venv
 ```
 
----
-
-## Activer le venv
+## Activer l'environnement
 
 ### Mac / Linux
 
 ```bash
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
 ### Windows
 
 ```bash
-venv\Scripts\activate
+.venv\Scripts\activate
 ```
-
----
 
 ## Installer les dépendances
 
@@ -241,23 +354,17 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
----
-
 ## Appliquer les migrations
 
 ```bash
 python manage.py migrate
 ```
 
----
-
 ## Créer un super utilisateur
 
 ```bash
 python manage.py createsuperuser
 ```
-
----
 
 ## Lancer le serveur
 
@@ -289,31 +396,38 @@ python manage.py runserver
 
 Ce projet a été réalisé afin de travailler :
 
-- Django REST Framework
-- Architecture REST
-- CRUD personnalisés
-- Relations SQL
-- Validations métier
-- Structuration backend
-- Gestion des serializers
-- Gestion des endpoints API
-- Réflexion architecture backend
+* Django REST Framework
+* JWT Authentication
+* Permissions DRF
+* APIView
+* CRUD personnalisés
+* Relations SQL
+* Validations métier
+* Serializer Context
+* Ownership Validation
+* Architecture REST
+* Structuration backend professionnelle
+* Tests Postman
 
 ---
 
 # Améliorations futures
 
-- Authentification JWT
-- Permissions utilisateurs
-- Pagination
-- Recherche et filtres
-- Upload d’images
-- Documentation Swagger/OpenAPI
-- Tests unitaires
-- Dockerisation
+* PATCH Director
+* PATCH Actor
+* Pagination
+* Recherche et filtres
+* Upload d’images
+* Documentation Swagger / OpenAPI
+* Tests unitaires
+* Dockerisation
+* Déploiement Cloud
 
 ---
 
 # Auteur
 
-Nabil KADOURI
+**Nabil KADOURI**
+
+Développeur Web & Web Mobile
+Formation Concepteur Développeur d'Applications
