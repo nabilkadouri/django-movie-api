@@ -291,9 +291,9 @@ Les identifiants sont affichés directement dans l'interface afin de faciliter l
 
 ---
 
-# Tests Postman
+# 🧪 Tests Postman
 
-L'ensemble des endpoints a été testé avec Postman.
+L'ensemble des endpoints de l'API a été testé avec Postman afin de valider le bon fonctionnement des fonctionnalités et des règles métier.
 
 Tests réalisés :
 
@@ -303,20 +303,12 @@ Tests réalisés :
 * CRUD Favorites
 * CRUD Actors
 * CRUD Directors
-* Permissions utilisateurs
-* Validation des données métier
+* Gestion des permissions
+* Validation des règles métier
 
-Ajouter une capture d'écran :
+## Collection Postman
 
-```txt
-docs/postman-tests.png
-```
-
-Puis dans le README :
-
-```md
-![Postman Collection](docs/postman-tests.png)
-```
+![Collection Postman](docs/postman-tests.png)
 
 ---
 
