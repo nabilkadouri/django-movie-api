@@ -39,7 +39,6 @@ class Movie(models.Model):
     actors = models.ManyToManyField(
         Actor,
         related_name="movies",
-        null=True,
         blank=True
         )
     

@@ -1,17 +1,18 @@
 from rest_framework import serializers
 from movies.models import Favorite
-from django.contrib.auth.models import User
-
-
 
 class FavoriteSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Favorite
         fields = "__all__"
+        read_only_fields = ["user"]
         
     def validate(self, data):
-        user = data.get("user")
+        
+        request = self.context.get("request")
+        
+        user = request.user
         movie = data.get("movie")
         
         if Favorite.objects.filter(user=user, movie=movie).exists():

@@ -1,12 +1,13 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from movies.models import Movie, Review
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Review
         fields = "__all__"
+        read_only_fields = ["user"]
         
     def validate_rating(self, value):
         
@@ -23,7 +24,9 @@ class ReviewSerializer(serializers.ModelSerializer):
     
     def validate(self, data):
         
-        user = data.get("user")
+        request = self.context.get("request")
+        
+        user = request.user
         movie = data.get("movie")
         
         if Review.objects.filter(user=user, movie=movie).exists():

@@ -19,7 +19,10 @@ class ReviewView(APIView):
     
     def post(self, request):
         
-        serializer = ReviewSerializer(data=request.data)
+        serializer = ReviewSerializer(
+            data=request.data,
+            context={"request": request}
+        )
         
         if serializer.is_valid():
             

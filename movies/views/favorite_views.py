@@ -26,7 +26,10 @@ class FavoriteView(APIView):
     
     def post(self, request):
         
-        serializer = FavoriteSerializer(data=request.data)
+        serializer = FavoriteSerializer(
+            data=request.data,
+            context={"request": request}
+        )
         
         if serializer.is_valid():
             serializer.save(user=request.user)
