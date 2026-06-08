@@ -125,6 +125,7 @@ class ReviewSerializerTest(TestCase):
         is_valid = serializer.is_valid()
         
         self.assertTrue(is_valid)
+       
         
     # Tests comment
     def test_comment_trim_spaces(self):
@@ -164,6 +165,7 @@ class ReviewSerializerTest(TestCase):
         is_valid = serializer.is_valid()
         print(is_valid)
         self.assertTrue(is_valid)
+
 
     # Test 
     def test_user_cannot_review_same_movie_twice(self):
