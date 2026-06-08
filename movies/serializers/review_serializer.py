@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from movies.models import Movie, Review
+from movies.models import Review
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -8,6 +8,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = "__all__"
         read_only_fields = ["user"]
+       
         
     def validate_rating(self, value):
         
@@ -18,9 +19,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         
         return value
     
+    
     def validate_comment(self, value):
-        
-        return value.strip()
+        return value.strip() if value else value
+    
     
     def validate(self, data):
         

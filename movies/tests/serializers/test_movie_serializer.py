@@ -23,6 +23,7 @@ class MovieSerializerTest(TestCase):
         
         self.assertTrue(is_valid)
         
+        
     # Tests Title
     def test_title_blank(self):
         
