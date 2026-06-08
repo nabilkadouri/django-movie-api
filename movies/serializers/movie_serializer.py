@@ -31,12 +31,10 @@ class MovieSerializer(serializers.ModelSerializer):
             )
             
         return value
-            
-            
+              
     def validate_description(self,value):
         
         return value.strip()
-    
     
     def validate_release_year(self, value):
         current_year = timezone.now().year
@@ -53,12 +51,11 @@ class MovieSerializer(serializers.ModelSerializer):
 
         return value
     
-    
     def validate_duration(self, value):
         
-        if value <= 0:
+        if value < 40:
             raise serializers.ValidationError(
-                "La durée du film ne doit pas être inférieur ou égale à zéro."
+                "Un film doit durer au moins 40 minutes."
             )
             
         return value
