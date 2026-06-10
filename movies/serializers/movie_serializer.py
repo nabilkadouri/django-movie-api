@@ -25,7 +25,16 @@ class MovieSerializer(serializers.ModelSerializer):
                 "Le titre doit contenir au moins 3 caractères."
             )
 
-        if Movie.objects.filter(title__iexact=value).exists():
+        queryset = Movie.objects.filter(
+            title__iexact=value
+        )
+
+        if self.instance:
+            queryset = queryset.exclude(
+                pk=self.instance.pk
+            )
+
+        if queryset.exists():
             raise serializers.ValidationError(
                 "Ce film existe déjà."
             )
