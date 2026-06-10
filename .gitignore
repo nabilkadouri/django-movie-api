@@ -17,3 +17,7 @@ media/
 
 # Mac
 .DS_Store
+
+
+.coverage
+htmlcov/
